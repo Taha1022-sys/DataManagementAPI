@@ -41,7 +41,7 @@ namespace ExcelDataManagementAPI.Controllers
                 newFiles = new[]
                 {
                     "gerceklesenhesap_20250905104743.xlsx",
-                    "gerceklesenmakrodata_20250905104736.xlsx"
+                    "gerceklesenmakrodata_20250915153256.xlsx"
                 },
                 importantNote = "Sadece 'gerceklesenmakro' ve 'gerceklesenhesap' içeren dosyalarda arama yapýlýr. GERÇEKLEÞEN dosyalarý hariç tutulur.",
                 quickSearchNote = "Hýzlý sonuç için /quick-search endpoint'ini kullanýn - sadece yeni dosyalarda arar"
@@ -64,7 +64,7 @@ namespace ExcelDataManagementAPI.Controllers
                 var priorityFiles = new[]
                 {
                     "gerceklesenhesap_20250905104743.xlsx",
-                    "gerceklesenmakrodata_20250905104736.xlsx"
+                    "gerceklesenmakrodata_20250915153256.xlsx"
                 };
 
                 // Sadece gerceklesenmakro ve gerceklesenhesap içeren dosyalarý filtrele
@@ -553,6 +553,86 @@ namespace ExcelDataManagementAPI.Controllers
         }
 
         /// <summary>
+        /// Hýzlý arama - SADECE belirtilen yeni dosyalarda arar
+        /// </summary>
+        [HttpGet("quick-search/{documentNumber}")]
+        public async Task<IActionResult> QuickSearchInNewFiles(string documentNumber, [FromQuery] string? sheetName = null)
+        {
+            try
+            {
+                documentNumber = Uri.UnescapeDataString(documentNumber);
+
+                // Sadece yeni ve belirli dosyalar
+                var newFiles = new[]
+                {
+                    "gerceklesenmakrodata_20250915153256.xlsx",
+                    "gerceklesenhesap_20250905104743.xlsx"
+                };
+
+                var query = _context.ExcelDataRows.Where(r => !r.IsDeleted &&
+                    newFiles.Contains(r.FileName) &&
+                    r.RowData.Contains(documentNumber));
+
+                // Sheet filtresi (eðer belirtilmiþse)
+                if (!string.IsNullOrEmpty(sheetName))
+                {
+                    query = query.Where(r => r.SheetName == sheetName);
+                }
+
+                var foundRows = await query
+                    .OrderBy(r => r.FileName)
+                    .ThenBy(r => r.SheetName)
+                    .ThenBy(r => r.RowIndex)
+                    .ToListAsync();
+
+                if (!foundRows.Any())
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = $"'{documentNumber}' dosya numarasý belirtilen yeni dosyalarda bulunamadý.",
+                        searchedFiles = newFiles,
+                        suggestion = "Tüm dosyalarda arama yapmak için /api/macro/search-by-document/{documentNumber} kullanýn."
+                    });
+                }
+
+                // JSON verileri parse et ve response DTO'larýna dönüþtür
+                var responseData = foundRows.Select(row =>
+                {
+                    var rowData = JsonSerializer.Deserialize<Dictionary<string, string>>(row.RowData) ?? new Dictionary<string, string>();
+
+                    return new ExcelDataResponseDto
+                    {
+                        Id = row.Id,
+                        FileName = row.FileName,
+                        SheetName = row.SheetName,
+                        RowIndex = row.RowIndex,
+                        Data = rowData,
+                        CreatedDate = row.CreatedDate,
+                        ModifiedDate = row.ModifiedDate,
+                        Version = row.Version,
+                        ModifiedBy = row.ModifiedBy
+                    };
+                }).ToList();
+
+                return Ok(new
+                {
+                    success = true,
+                    documentNumber = documentNumber,
+                    totalRows = responseData.Count,
+                    data = responseData,
+                    searchedFiles = newFiles,
+                    message = $"'{documentNumber}' için yeni dosyalarda {responseData.Count} kayýt bulundu."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Hýzlý arama hatasý: {DocumentNumber}", documentNumber);
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Hýzlý arama - SADECE belirtilen makro dosyasýnda arar
         /// </summary>
         [HttpGet("quick-search-makro/{documentNumber}")]
@@ -565,7 +645,7 @@ namespace ExcelDataManagementAPI.Controllers
                 // Sadece makro dosyasýnda arama yap
                 var newFiles = new[]
                 {
-                    "gerceklesenmakrodata_20250905104736.xlsx"
+                    "gerceklesenmakrodata_20250915153256.xlsx"
                 };
 
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted &&
