@@ -52,7 +52,8 @@ namespace ExcelDataManagementAPI
                             "http://localhost:3000",   
                             "http://localhost:5173",   
                             "https://localhost:7002",  
-                            "http://localhost:5002",   
+                            "http://localhost:5002",
+                            "https://data-management-ui-ashen.vercel.app",
                             "http://172.20.10.7:5002"   
                         )
                         .AllowAnyHeader()
