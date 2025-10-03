@@ -38,10 +38,11 @@ namespace ExcelDataManagementAPI
             builder.Services.AddScoped<IExcelService, ExcelService>();
             builder.Services.AddScoped<IDataComparisonService, DataComparisonService>();
             builder.Services.AddScoped<IAuditService, AuditService>();
-            // Tüm IP'lerde ve özellikle 172.20.10.7'de dinlemesi için UseUrls ayarı
+      
             builder.WebHost.UseUrls(
-                "http://0.0.0.0:5002", // Tüm IP'lerde dinle
-                "http://172.20.10.7:5002" // Özellikle bu IP'de de dinle (isteğe bağlı, 0.0.0.0 yeterli olur)
+                
+                "http://0.0.0.0:5002"
+            
             );
 
             builder.Services.AddHttpContextAccessor();  
