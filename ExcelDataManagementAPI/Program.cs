@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ExcelDataManagementAPI.Data;
 using ExcelDataManagementAPI.Services;
@@ -17,7 +17,6 @@ namespace ExcelDataManagementAPI
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             
-            
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -28,26 +27,22 @@ namespace ExcelDataManagementAPI
                 });
             });
 
-            
             builder.Services.AddDbContext<ExcelDataContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            
             builder.Services.AddScoped<IExcelService, ExcelService>();
             builder.Services.AddScoped<IDataComparisonService, DataComparisonService>();
             builder.Services.AddScoped<IAuditService, AuditService>();    
 
             builder.Services.AddHttpContextAccessor();  
 
-            
             builder.Services.Configure<IISServerOptions>(options =>
             {
                 options.MaxRequestBodySize = 100 * 1024 * 1024; 
             });
 
-            
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("ApiPolicy", policy =>
@@ -73,7 +68,7 @@ namespace ExcelDataManagementAPI
                 });
             });
 
-                    var app = builder.Build();
+            var app = builder.Build();
             
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -98,10 +93,10 @@ namespace ExcelDataManagementAPI
             app.MapControllers();
 
             app.MapGet("/", context =>
-                       {
-                           context.Response.Redirect("/swagger");
-                           return Task.CompletedTask;
-                       });
+            {
+                context.Response.Redirect("/swagger");
+                return Task.CompletedTask;
+            });
 
             try
             {
