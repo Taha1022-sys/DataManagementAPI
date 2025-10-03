@@ -24,7 +24,7 @@ jobs:
         run: dotnet build ExcelDataManagementSolution.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ExcelDataManagementAPI.csproj --configuration Release --output ./publish
+        run: dotnet publish ExcelDataManagementAPI/ExcelDataManagementAPI.csproj --configuration Release --output ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
