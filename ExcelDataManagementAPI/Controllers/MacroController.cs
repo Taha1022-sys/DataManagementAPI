@@ -26,31 +26,31 @@ namespace ExcelDataManagementAPI.Controllers
         public IActionResult Test()
         {
             return Ok(new {
-                message = "Macro API çalışıyor!",
+                message = "Macro API Ã§alÃ½Ã¾Ã½yor!",
                 timestamp = DateTime.Now,
                 availableOperations = new[]
                 {
-                    "Hızlı arama (sadece yeni dosyalarda): GET /api/macro/quick-search/{documentNumber}",
-                    "Dosya numarası arama (tüm dosyalarda): GET /api/macro/search-by-document/{documentNumber}",
-                    "Dosya numarası bazlı veri güncelleme: PUT /api/macro/update-document-data",
-                    "Mevcut dosyaları listeleme: GET /api/macro/available-files",
-                    "Dosya numarası istatistikleri: GET /api/macro/document-statistics/{documentNumber}",
+                    "HÃ½zlÃ½ arama (sadece yeni dosyalarda): GET /api/macro/quick-search/{documentNumber}",
+                    "Dosya numarasÃ½ arama (tÃ¼m dosyalarda): GET /api/macro/search-by-document/{documentNumber}",
+                    "Dosya numarasÃ½ bazlÃ½ veri gÃ¼ncelleme: PUT /api/macro/update-document-data",
+                    "Mevcut dosyalarÃ½ listeleme: GET /api/macro/available-files",
+                    "Dosya numarasÃ½ istatistikleri: GET /api/macro/document-statistics/{documentNumber}",
                     "Dosya filtre durumu: GET /api/macro/file-filter-status"
                 },
-                description = "Excel dosyalarınızı upload ettikten sonra dosya numarası bazlı işlemler yapabilirsiniz",
+                description = "Excel dosyalarÃ½nÃ½zÃ½ upload ettikten sonra dosya numarasÃ½ bazlÃ½ iÃ¾lemler yapabilirsiniz",
                 newFiles = new[]
                 {
-                    "gerceklesenhesap_20250905104743.xlsx",
-                    "gerceklesenmakrodata_20250915153256.xlsx"
+                    "gerceklesenhesap_20251003191421.xlsx",
+                    "gerceklesenmakrodata_20251003191243.xlsx"
                 },
-                importantNote = "Sadece 'gerceklesenmakro' ve 'gerceklesenhesap' içeren dosyalarda arama yapılır. GERÇEKLEŞEN dosyaları hariç tutulur.",
-                quickSearchNote = "Hızlı sonuç için /quick-search endpoint'ini kullanın - sadece yeni dosyalarda arar"
+                importantNote = "Sadece 'gerceklesenmakro' ve 'gerceklesenhesap' iÃ§eren dosyalarda arama yapÃ½lÃ½r. GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§ tutulur.",
+                quickSearchNote = "HÃ½zlÃ½ sonuÃ§ iÃ§in /quick-search endpoint'ini kullanÃ½n - sadece yeni dosyalarda arar"
             });
         }
 
         /// <summary>
-        /// Mevcut Excel dosyalarını listeler - sadece gerceklesenmakro ve gerceklesenhesap dosyalarını gösterir
-        /// Yeni dosyalar öncelikli gösterilir
+        /// Mevcut Excel dosyalarÃ½nÃ½ listeler - sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½nÃ½ gÃ¶sterir
+        /// Yeni dosyalar Ã¶ncelikli gÃ¶sterilir
         /// </summary>
         [HttpGet("available-files")]
         public async Task<IActionResult> GetAvailableFiles()
@@ -60,19 +60,19 @@ namespace ExcelDataManagementAPI.Controllers
                 var files = await _excelService.GetExcelFilesAsync();
                 var fileStats = new List<object>();
 
-                // Öncelikli dosya isimleri - yeni yüklenen dosyalar
+                // Ã–ncelikli dosya isimleri - yeni yÃ¼klenen dosyalar
                 var priorityFiles = new[]
                 {
-                    "gerceklesenhesap_20250905104743.xlsx",
-                    "gerceklesenmakrodata_20250915153256.xlsx"
+                    "gerceklesenhesap_20251003191421.xlsx",
+                    "gerceklesenmakrodata_20251003191243.xlsx"
                 };
 
-                // Sadece gerceklesenmakro ve gerceklesenhesap içeren dosyaları filtrele
+                // Sadece gerceklesenmakro ve gerceklesenhesap iÃ§eren dosyalarÃ½ filtrele
                 var filteredFiles = files.Where(f => f.IsActive &&
                     (f.FileName.ToLower().Contains("gerceklesenmakro") ||
                      f.FileName.ToLower().Contains("gerceklesenhesap")) &&
-                    !f.FileName.ToUpper().Contains("GERÇEKLEŞEN"))
-                    .OrderBy(f => priorityFiles.Contains(f.FileName) ? 0 : 1) // Yeni dosyalar önce
+                    !f.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN"))
+                    .OrderBy(f => priorityFiles.Contains(f.FileName) ? 0 : 1) // Yeni dosyalar Ã¶nce
                     .ThenBy(f => f.FileName);
 
                 foreach (var file in filteredFiles)
@@ -98,7 +98,7 @@ namespace ExcelDataManagementAPI.Controllers
                         AvailableSheets = sheets,
                         ReadyForSearch = dataCount > 0,
                         IsNewPriorityFile = isNewFile,
-                        Status = isNewFile ? "YENİ - ÖNCELİKLİ" : "Normal"
+                        Status = isNewFile ? "YENÃ - Ã–NCELÃKLÃ" : "Normal"
                     });
                 }
 
@@ -116,20 +116,20 @@ namespace ExcelDataManagementAPI.Controllers
                         otherFiles = otherFiles.Count
                     },
                     priorityFiles = priorityFiles,
-                    message = "Macro amaçlı kullanılabilir Excel dosyaları (yeni dosyalar öncelikli)",
-                    filteredOut = "GERÇEKLEŞEN dosyaları hariç tutuldu",
-                    quickSearchNote = "Hızlı arama için /quick-search endpoint'i sadece öncelikli dosyalarda arar"
+                    message = "Macro amaÃ§lÃ½ kullanÃ½labilir Excel dosyalarÃ½ (yeni dosyalar Ã¶ncelikli)",
+                    filteredOut = "GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§ tutuldu",
+                    quickSearchNote = "HÃ½zlÃ½ arama iÃ§in /quick-search endpoint'i sadece Ã¶ncelikli dosyalarda arar"
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Macro dosyaları listelenirken hata");
+                _logger.LogError(ex, "Macro dosyalarÃ½ listelenirken hata");
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
 
         /// <summary>
-        /// Dosya numarasına göre verileri arar - SADECE gerceklesenmakro ve gerceklesenhesap dosyalarında
+        /// Dosya numarasÃ½na gÃ¶re verileri arar - SADECE gerceklesenmakro ve gerceklesenhesap dosyalarÃ½nda
         /// </summary>
         [HttpGet("search-by-document/{documentNumber}")]
         public async Task<IActionResult> SearchByDocumentNumber(string documentNumber, [FromQuery] string? fileName = null, [FromQuery] string? sheetName = null)
@@ -138,41 +138,41 @@ namespace ExcelDataManagementAPI.Controllers
             {
                 documentNumber = Uri.UnescapeDataString(documentNumber);
 
-                _logger.LogInformation("START: Dosya numarası aranıyor: {DocumentNumber}, FileName: {FileName}, SheetName: {SheetName}",
+                _logger.LogInformation("START: Dosya numarasÃ½ aranÃ½yor: {DocumentNumber}, FileName: {FileName}, SheetName: {SheetName}",
                     documentNumber, fileName, sheetName);
 
                 if (string.IsNullOrWhiteSpace(documentNumber))
                 {
-                    return BadRequest(new { success = false, message = "Dosya numarası boş olamaz" });
+                    return BadRequest(new { success = false, message = "Dosya numarasÃ½ boÃ¾ olamaz" });
                 }
 
                 // Temel sorgu
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted);
 
-                // KESİN FİLTRE: Sadece belirli dosya adlarını içeren satırları al.
-                // Bu, önceki tüm karmaşık filtrelerin yerini alır.
+                // KESÃN FÃLTRE: Sadece belirli dosya adlarÃ½nÃ½ iÃ§eren satÃ½rlarÃ½ al.
+                // Bu, Ã¶nceki tÃ¼m karmaÃ¾Ã½k filtrelerin yerini alÃ½r.
                 var targetFiles = new[] { "gerceklesenmakro", "gerceklesenhesap" };
                 query = query.Where(r => targetFiles.Any(f => r.FileName.ToLower().Contains(f)));
 
-                _logger.LogInformation("ADIM 1: Macro dosyaları filtrelendi. Mevcut satır sayısı: {Count}", await query.CountAsync());
+                _logger.LogInformation("ADIM 1: Macro dosyalarÃ½ filtrelendi. Mevcut satÃ½r sayÃ½sÃ½: {Count}", await query.CountAsync());
 
-                // Dosya filtresi (isteğe bağlı)
+                // Dosya filtresi (isteÃ°e baÃ°lÃ½)
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     query = query.Where(r => r.FileName == fileName);
-                    _logger.LogInformation("ADIM 2: Belirtilen dosya adı '{FileName}' filtrelendi. Mevcut satır sayısı: {Count}", fileName, await query.CountAsync());
+                    _logger.LogInformation("ADIM 2: Belirtilen dosya adÃ½ '{FileName}' filtrelendi. Mevcut satÃ½r sayÃ½sÃ½: {Count}", fileName, await query.CountAsync());
                 }
 
-                // Sheet filtresi (isteğe bağlı)
+                // Sheet filtresi (isteÃ°e baÃ°lÃ½)
                 if (!string.IsNullOrEmpty(sheetName))
                 {
                     query = query.Where(r => r.SheetName == sheetName);
-                    _logger.LogInformation("ADIM 3: Belirtilen sheet adı '{SheetName}' filtrelendi. Mevcut satır sayısı: {Count}", sheetName, await query.CountAsync());
+                    _logger.LogInformation("ADIM 3: Belirtilen sheet adÃ½ '{SheetName}' filtrelendi. Mevcut satÃ½r sayÃ½sÃ½: {Count}", sheetName, await query.CountAsync());
                 }
 
-                // Dosya numarası araması - JSON verisi içinde arama
+                // Dosya numarasÃ½ aramasÃ½ - JSON verisi iÃ§inde arama
                 query = query.Where(r => r.RowData.Contains(documentNumber));
-                _logger.LogInformation("ADIM 4: Dosya numarası '{DocumentNumber}' arandı. Sonuç sayısı: {Count}", documentNumber, await query.CountAsync());
+                _logger.LogInformation("ADIM 4: Dosya numarasÃ½ '{DocumentNumber}' arandÃ½. SonuÃ§ sayÃ½sÃ½: {Count}", documentNumber, await query.CountAsync());
 
 
                 var foundRows = await query
@@ -183,24 +183,24 @@ namespace ExcelDataManagementAPI.Controllers
 
                 if (!foundRows.Any())
                 {
-                    _logger.LogWarning("SONUÇ: '{DocumentNumber}' dosya numarası için kayıt bulunamadı.", documentNumber);
+                    _logger.LogWarning("SONUÃ‡: '{DocumentNumber}' dosya numarasÃ½ iÃ§in kayÃ½t bulunamadÃ½.", documentNumber);
                     return NotFound(new
                     {
                         success = false,
-                        message = $"'{documentNumber}' dosya numarası belirtilen macro dosyalarında bulunamadı.",
-                        suggestion = "Dosya numarasını kontrol edin veya dosyaların veritabanına doğru yüklendiğinden emin olun. API sadece 'gerceklesenmakro' ve 'gerceklesenhesap' içeren dosyalarda arama yapar.",
+                        message = $"'{documentNumber}' dosya numarasÃ½ belirtilen macro dosyalarÃ½nda bulunamadÃ½.",
+                        suggestion = "Dosya numarasÃ½nÃ½ kontrol edin veya dosyalarÃ½n veritabanÃ½na doÃ°ru yÃ¼klendiÃ°inden emin olun. API sadece 'gerceklesenmakro' ve 'gerceklesenhesap' iÃ§eren dosyalarda arama yapar.",
                         searchedIn = new
                         {
-                            fileName = fileName ?? "Tüm 'gerceklesenmakro' ve 'gerceklesenhesap' dosyaları",
-                            sheetName = sheetName ?? "Tüm sheet'ler",
+                            fileName = fileName ?? "TÃ¼m 'gerceklesenmakro' ve 'gerceklesenhesap' dosyalarÃ½",
+                            sheetName = sheetName ?? "TÃ¼m sheet'ler",
                             documentNumber = documentNumber
                         }
                     });
                 }
 
-                _logger.LogInformation("SONUÇ: '{DocumentNumber}' için {Count} kayıt bulundu.", documentNumber, foundRows.Count);
+                _logger.LogInformation("SONUÃ‡: '{DocumentNumber}' iÃ§in {Count} kayÃ½t bulundu.", documentNumber, foundRows.Count);
 
-                // JSON verileri parse et ve response DTO'larına dönüştür
+                // JSON verileri parse et ve response DTO'larÃ½na dÃ¶nÃ¼Ã¾tÃ¼r
                 var responseData = foundRows.Select(row =>
                 {
                     var rowData = JsonSerializer.Deserialize<Dictionary<string, string>>(row.RowData) ?? new Dictionary<string, string>();
@@ -225,18 +225,18 @@ namespace ExcelDataManagementAPI.Controllers
                     documentNumber = documentNumber,
                     totalRows = responseData.Count,
                     data = responseData,
-                    message = $"'{documentNumber}' dosya numarası için {responseData.Count} kayıt bulundu."
+                    message = $"'{documentNumber}' dosya numarasÃ½ iÃ§in {responseData.Count} kayÃ½t bulundu."
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Dosya numarası aranırken kritik hata: {DocumentNumber}", documentNumber);
-                return StatusCode(500, new { success = false, message = $"Sunucu hatası: {ex.Message}" });
+                _logger.LogError(ex, "Dosya numarasÃ½ aranÃ½rken kritik hata: {DocumentNumber}", documentNumber);
+                return StatusCode(500, new { success = false, message = $"Sunucu hatasÃ½: {ex.Message}" });
             }
         }
 
         /// <summary>
-        /// Dosya numarasına göre veri günceller - sadece macro dosyalarında
+        /// Dosya numarasÃ½na gÃ¶re veri gÃ¼nceller - sadece macro dosyalarÃ½nda
         /// </summary>
         [HttpPut("update-document-data")]
         public async Task<IActionResult> UpdateDocumentData([FromBody] MacroUpdateRequestDto request)
@@ -245,48 +245,48 @@ namespace ExcelDataManagementAPI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(request.DocumentNumber))
                 {
-                    return BadRequest(new { success = false, message = "Dosya numarası gerekli" });
+                    return BadRequest(new { success = false, message = "Dosya numarasÃ½ gerekli" });
                 }
 
                 if (request.RowId <= 0)
                 {
-                    return BadRequest(new { success = false, message = "Geçerli bir Row ID gerekli" });
+                    return BadRequest(new { success = false, message = "GeÃ§erli bir Row ID gerekli" });
                 }
 
                 if (request.UpdateData == null || !request.UpdateData.Any())
                 {
-                    return BadRequest(new { success = false, message = "Güncellenecek veri gerekli" });
+                    return BadRequest(new { success = false, message = "GÃ¼ncellenecek veri gerekli" });
                 }
 
-                _logger.LogInformation("Macro güncelleme: DocumentNumber={DocumentNumber}, RowId={RowId}, UpdatedBy={UpdatedBy}",
+                _logger.LogInformation("Macro gÃ¼ncelleme: DocumentNumber={DocumentNumber}, RowId={RowId}, UpdatedBy={UpdatedBy}",
                     request.DocumentNumber, request.RowId, request.UpdatedBy);
 
-                // Önce ilgili satırı bul ve doğrula - sadece macro dosyalarında
+                // Ã–nce ilgili satÃ½rÃ½ bul ve doÃ°rula - sadece macro dosyalarÃ½nda
                 var targetRow = await _context.ExcelDataRows
                     .FirstOrDefaultAsync(r => r.Id == request.RowId && !r.IsDeleted &&
                         (r.FileName.ToLower().Contains("gerceklesenmakro") ||
                          r.FileName.ToLower().Contains("gerceklesenhesap")) &&
-                        !r.FileName.ToUpper().Contains("GERÇEKLEŞEN"));
+                        !r.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN"));
 
                 if (targetRow == null)
                 {
                     return NotFound(new
                     {
                         success = false,
-                        message = "Güncellenecek satır macro dosyalarında bulunamadı",
+                        message = "GÃ¼ncellenecek satÃ½r macro dosyalarÃ½nda bulunamadÃ½",
                         rowId = request.RowId,
-                        searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyaları",
-                        excludedScope = "GERÇEKLEŞEN dosyaları hariç"
+                        searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½",
+                        excludedScope = "GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§"
                     });
                 }
 
-                // Dosya numarasının bu satırda olup olmadığını kontrol et
+                // Dosya numarasÃ½nÃ½n bu satÃ½rda olup olmadÃ½Ã°Ã½nÃ½ kontrol et
                 if (!targetRow.RowData.Contains(request.DocumentNumber))
                 {
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Belirtilen satır bu dosya numarasına ait değil",
+                        message = "Belirtilen satÃ½r bu dosya numarasÃ½na ait deÃ°il",
                         documentNumber = request.DocumentNumber,
                         rowId = request.RowId,
                         rowFileName = targetRow.FileName,
@@ -294,7 +294,7 @@ namespace ExcelDataManagementAPI.Controllers
                     });
                 }
 
-                // Güncelleme DTO'su oluştur
+                // GÃ¼ncelleme DTO'su oluÃ¾tur
                 var updateDto = new ExcelDataUpdateDto
                 {
                     Id = request.RowId,
@@ -302,7 +302,7 @@ namespace ExcelDataManagementAPI.Controllers
                     ModifiedBy = request.UpdatedBy
                 };
 
-                // Mevcut ExcelService kullanarak güncelle
+                // Mevcut ExcelService kullanarak gÃ¼ncelle
                 var result = await _excelService.UpdateExcelDataAsync(updateDto, HttpContext);
 
                 return Ok(new
@@ -311,7 +311,7 @@ namespace ExcelDataManagementAPI.Controllers
                     data = result,
                     documentNumber = request.DocumentNumber,
                     updatedFields = request.UpdateData.Keys.ToArray(),
-                    message = "Macro dosyasındaki veri başarıyla güncellendi",
+                    message = "Macro dosyasÃ½ndaki veri baÃ¾arÃ½yla gÃ¼ncellendi",
                     version = result.Version,
                     modifiedDate = result.ModifiedDate,
                     updatedInFile = result.FileName
@@ -319,14 +319,14 @@ namespace ExcelDataManagementAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Macro güncelleme hatası: DocumentNumber={DocumentNumber}, RowId={RowId}",
+                _logger.LogError(ex, "Macro gÃ¼ncelleme hatasÃ½: DocumentNumber={DocumentNumber}, RowId={RowId}",
                     request.DocumentNumber, request.RowId);
 
-                if (ex.Message.Contains("bulunamadı"))
+                if (ex.Message.Contains("bulunamadÃ½"))
                 {
                     return NotFound(new { success = false, message = ex.Message });
                 }
-                else if (ex.Message.Contains("eşzamanlılık"))
+                else if (ex.Message.Contains("eÃ¾zamanlÃ½lÃ½k"))
                 {
                     return Conflict(new { success = false, message = ex.Message });
                 }
@@ -344,12 +344,12 @@ namespace ExcelDataManagementAPI.Controllers
 
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted && r.RowData.Contains(documentNumber));
 
-                // Sadece gerceklesenmakro ve gerceklesenhesap dosyalarında arama yap
-                // GERÇEKLEŞEN dosyalarını hariç tut
+                // Sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½nda arama yap
+                // GERÃ‡EKLEÃEN dosyalarÃ½nÃ½ hariÃ§ tut
                 query = query.Where(r =>
                     (r.FileName.ToLower().Contains("gerceklesenmakro") ||
                      r.FileName.ToLower().Contains("gerceklesenhesap")) &&
-                    !r.FileName.ToUpper().Contains("GERÇEKLEŞEN"));
+                    !r.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN"));
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
@@ -363,10 +363,10 @@ namespace ExcelDataManagementAPI.Controllers
                     return NotFound(new
                     {
                         success = false,
-                        message = $"'{documentNumber}' dosya numarası macro dosyalarında bulunamadı",
+                        message = $"'{documentNumber}' dosya numarasÃ½ macro dosyalarÃ½nda bulunamadÃ½",
                         documentNumber = documentNumber,
-                        searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyaları",
-                        excludedScope = "GERÇEKLEŞEN dosyaları hariç"
+                        searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½",
+                        excludedScope = "GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§"
                     });
                 }
 
@@ -402,14 +402,14 @@ namespace ExcelDataManagementAPI.Controllers
                         sheetBreakdown = sheetGroups,
                         lastModified = lastModified
                     },
-                    searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyaları",
-                    excludedScope = "GERÇEKLEŞEN dosyaları hariç",
-                    message = $"'{documentNumber}' dosya numarası için macro dosyaları istatistikleri"
+                    searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½",
+                    excludedScope = "GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§",
+                    message = $"'{documentNumber}' dosya numarasÃ½ iÃ§in macro dosyalarÃ½ istatistikleri"
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Dosya numarası istatistikleri alınırken hata: {DocumentNumber}", documentNumber);
+                _logger.LogError(ex, "Dosya numarasÃ½ istatistikleri alÃ½nÃ½rken hata: {DocumentNumber}", documentNumber);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
@@ -421,15 +421,15 @@ namespace ExcelDataManagementAPI.Controllers
             {
                 if (string.IsNullOrWhiteSpace(request.DocumentNumber))
                 {
-                    return BadRequest(new { success = false, message = "Dosya numarası gerekli" });
+                    return BadRequest(new { success = false, message = "Dosya numarasÃ½ gerekli" });
                 }
 
                 if (request.Updates == null || !request.Updates.Any())
                 {
-                    return BadRequest(new { success = false, message = "Güncellenecek veri listesi gerekli" });
+                    return BadRequest(new { success = false, message = "GÃ¼ncellenecek veri listesi gerekli" });
                 }
 
-                _logger.LogInformation("Macro toplu güncelleme: DocumentNumber={DocumentNumber}, UpdateCount={UpdateCount}",
+                _logger.LogInformation("Macro toplu gÃ¼ncelleme: DocumentNumber={DocumentNumber}, UpdateCount={UpdateCount}",
                     request.DocumentNumber, request.Updates.Count);
 
                 var results = new List<ExcelDataResponseDto>();
@@ -439,22 +439,22 @@ namespace ExcelDataManagementAPI.Controllers
                 {
                     try
                     {
-                        // Her güncelleme için ayrı ayrı kontrol - sadece macro dosyalarında
+                        // Her gÃ¼ncelleme iÃ§in ayrÃ½ ayrÃ½ kontrol - sadece macro dosyalarÃ½nda
                         var targetRow = await _context.ExcelDataRows
                             .FirstOrDefaultAsync(r => r.Id == update.RowId && !r.IsDeleted &&
                                 (r.FileName.ToLower().Contains("gerceklesenmakro") ||
                                  r.FileName.ToLower().Contains("gerceklesenhesap")) &&
-                                !r.FileName.ToUpper().Contains("GERÇEKLEŞEN"));
+                                !r.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN"));
 
                         if (targetRow == null)
                         {
-                            errors.Add($"Row ID {update.RowId}: Satır macro dosyalarında bulunamadı");
+                            errors.Add($"Row ID {update.RowId}: SatÃ½r macro dosyalarÃ½nda bulunamadÃ½");
                             continue;
                         }
 
                         if (!targetRow.RowData.Contains(request.DocumentNumber))
                         {
-                            errors.Add($"Row ID {update.RowId}: Bu dosya numarasına ait değil");
+                            errors.Add($"Row ID {update.RowId}: Bu dosya numarasÃ½na ait deÃ°il");
                             continue;
                         }
 
@@ -482,20 +482,20 @@ namespace ExcelDataManagementAPI.Controllers
                     totalRequested = request.Updates.Count,
                     data = results,
                     errors = errors,
-                    searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyaları",
-                    excludedScope = "GERÇEKLEŞEN dosyaları hariç",
-                    message = $"Macro dosyalarında {results.Count}/{request.Updates.Count} güncelleme başarılı"
+                    searchScope = "Sadece gerceklesenmakro ve gerceklesenhesap dosyalarÃ½",
+                    excludedScope = "GERÃ‡EKLEÃEN dosyalarÃ½ hariÃ§",
+                    message = $"Macro dosyalarÃ½nda {results.Count}/{request.Updates.Count} gÃ¼ncelleme baÃ¾arÃ½lÃ½"
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Macro toplu güncelleme hatası: DocumentNumber={DocumentNumber}", request.DocumentNumber);
+                _logger.LogError(ex, "Macro toplu gÃ¼ncelleme hatasÃ½: DocumentNumber={DocumentNumber}", request.DocumentNumber);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
 
         /// <summary>
-        /// Macro API'sinin dosya filtre durumunu gösterir
+        /// Macro API'sinin dosya filtre durumunu gÃ¶sterir
         /// </summary>
         [HttpGet("file-filter-status")]
         public async Task<IActionResult> GetFileFilterStatus()
@@ -507,10 +507,10 @@ namespace ExcelDataManagementAPI.Controllers
                 var macroFiles = allFiles.Where(f => f.IsActive &&
                     (f.FileName.ToLower().Contains("gerceklesenmakro") ||
                      f.FileName.ToLower().Contains("gerceklesenhesap")) &&
-                    !f.FileName.ToUpper().Contains("GERÇEKLEŞEN")).ToList();
+                    !f.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN")).ToList();
 
                 var excludedFiles = allFiles.Where(f => f.IsActive &&
-                    (f.FileName.ToUpper().Contains("GERÇEKLEŞEN") ||
+                    (f.FileName.ToUpper().Contains("GERÃ‡EKLEÃEN") ||
                      (!f.FileName.ToLower().Contains("gerceklesenmakro") &&
                       !f.FileName.ToLower().Contains("gerceklesenhesap")))).ToList();
 
@@ -519,22 +519,22 @@ namespace ExcelDataManagementAPI.Controllers
                     success = true,
                     filterCriteria = new
                     {
-                        included = "Dosya adında 'gerceklesenmakro' veya 'gerceklesenhesap' geçen dosyalar",
-                        excluded = "Dosya adında 'GERÇEKLEŞEN' geçen dosyalar veya macro dosyası olmayan dosyalar"
+                        included = "Dosya adÃ½nda 'gerceklesenmakro' veya 'gerceklesenhesap' geÃ§en dosyalar",
+                        excluded = "Dosya adÃ½nda 'GERÃ‡EKLEÃEN' geÃ§en dosyalar veya macro dosyasÃ½ olmayan dosyalar"
                     },
                     macroFiles = macroFiles.Select(f => new
                     {
                         f.FileName,
                         f.OriginalFileName,
                         f.UploadDate,
-                        status = "Macro işlemlerde KULLANILIR"
+                        status = "Macro iÃ¾lemlerde KULLANILIR"
                     }),
                     excludedFiles = excludedFiles.Select(f => new
                     {
                         f.FileName,
                         f.OriginalFileName,
                         f.UploadDate,
-                        status = "Macro işlemlerde KULLANILMAZ"
+                        status = "Macro iÃ¾lemlerde KULLANILMAZ"
                     }),
                     counts = new
                     {
@@ -547,13 +547,13 @@ namespace ExcelDataManagementAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Dosya filtre durumu alınırken hata");
+                _logger.LogError(ex, "Dosya filtre durumu alÃ½nÃ½rken hata");
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
 
         /// <summary>
-        /// Hızlı arama - SADECE belirtilen yeni dosyalarda arar
+        /// HÃ½zlÃ½ arama - SADECE belirtilen yeni dosyalarda arar
         /// </summary>
         [HttpGet("quick-search/{documentNumber}")]
         public async Task<IActionResult> QuickSearchInNewFiles(string documentNumber, [FromQuery] string? sheetName = null)
@@ -565,15 +565,15 @@ namespace ExcelDataManagementAPI.Controllers
                 // Sadece yeni ve belirli dosyalar
                 var newFiles = new[]
                 {
-                    "gerceklesenmakrodata_20250915153256.xlsx",
-                    "gerceklesenhesap_20250905104743.xlsx"
+                    "gerceklesenmakrodata_20251003191243.xlsx",
+                    "gerceklesenhesap_20251003191421.xlsx"
                 };
 
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted &&
                     newFiles.Contains(r.FileName) &&
                     r.RowData.Contains(documentNumber));
 
-                // Sheet filtresi (eğer belirtilmişse)
+                // Sheet filtresi (eÃ°er belirtilmiÃ¾se)
                 if (!string.IsNullOrEmpty(sheetName))
                 {
                     query = query.Where(r => r.SheetName == sheetName);
@@ -590,13 +590,13 @@ namespace ExcelDataManagementAPI.Controllers
                     return NotFound(new
                     {
                         success = false,
-                        message = $"'{documentNumber}' dosya numarası belirtilen yeni dosyalarda bulunamadı.",
+                        message = $"'{documentNumber}' dosya numarasÃ½ belirtilen yeni dosyalarda bulunamadÃ½.",
                         searchedFiles = newFiles,
-                        suggestion = "Tüm dosyalarda arama yapmak için /api/macro/search-by-document/{documentNumber} kullanın."
+                        suggestion = "TÃ¼m dosyalarda arama yapmak iÃ§in /api/macro/search-by-document/{documentNumber} kullanÃ½n."
                     });
                 }
 
-                // JSON verileri parse et ve response DTO'larına dönüştür
+                // JSON verileri parse et ve response DTO'larÃ½na dÃ¶nÃ¼Ã¾tÃ¼r
                 var responseData = foundRows.Select(row =>
                 {
                     var rowData = JsonSerializer.Deserialize<Dictionary<string, string>>(row.RowData) ?? new Dictionary<string, string>();
@@ -622,19 +622,17 @@ namespace ExcelDataManagementAPI.Controllers
                     totalRows = responseData.Count,
                     data = responseData,
                     searchedFiles = newFiles,
-                    message = $"'{documentNumber}' için yeni dosyalarda {responseData.Count} kayıt bulundu."
+                    message = $"'{documentNumber}' iÃ§in yeni dosyalarda {responseData.Count} kayÃ½t bulundu."
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Hızlı arama hatası: {DocumentNumber}", documentNumber);
+                _logger.LogError(ex, "HÃ½zlÃ½ arama hatasÃ½: {DocumentNumber}", documentNumber);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
 
-        /// <summary>
-        /// Hızlı arama - SADECE belirtilen makro dosyasında arar
-        /// </summary>
+     
         [HttpGet("quick-search-makro/{documentNumber}")]
         public async Task<IActionResult> QuickSearchMakroOnly(string documentNumber, [FromQuery] string? sheetName = null)
         {
@@ -642,17 +640,17 @@ namespace ExcelDataManagementAPI.Controllers
             {
                 documentNumber = Uri.UnescapeDataString(documentNumber);
 
-                // Sadece makro dosyasında arama yap
+                // Sadece makro dosyasÃ½nda arama yap
                 var newFiles = new[]
                 {
-                    "gerceklesenmakrodata_20250915153256.xlsx"
+                    "gerceklesenmakrodata_20251003191243.xlsx"
                 };
 
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted &&
                     newFiles.Contains(r.FileName) &&
                     r.RowData.Contains(documentNumber));
 
-                // Sheet filtresi (eğer belirtilmişse)
+                // Sheet filtresi (eÃ°er belirtilmiÃ¾se)
                 if (!string.IsNullOrEmpty(sheetName))
                 {
                     query = query.Where(r => r.SheetName == sheetName);
@@ -669,13 +667,13 @@ namespace ExcelDataManagementAPI.Controllers
                     return NotFound(new
                     {
                         success = false,
-                        message = $"'{documentNumber}' dosya numarası belirtilen makro dosyasında bulunamadı.",
+                        message = $"'{documentNumber}' dosya numarasÃ½ belirtilen makro dosyasÃ½nda bulunamadÃ½.",
                         searchedFiles = newFiles,
-                        suggestion = "Tüm dosyalarda arama yapmak için /api/macro/search-by-document/{documentNumber} kullanın."
+                        suggestion = "TÃ¼m dosyalarda arama yapmak iÃ§in /api/macro/search-by-document/{documentNumber} kullanÃ½n."
                     });
                 }
 
-                // JSON verileri parse et ve response DTO'larına dönüştür
+                // JSON verileri parse et ve response DTO'larÃ½na dÃ¶nÃ¼Ã¾tÃ¼r
                 var responseData = foundRows.Select(row =>
                 {
                     var rowData = JsonSerializer.Deserialize<Dictionary<string, string>>(row.RowData) ?? new Dictionary<string, string>();
@@ -701,26 +699,24 @@ namespace ExcelDataManagementAPI.Controllers
                     totalRows = responseData.Count,
                     data = responseData,
                     searchedFiles = newFiles,
-                    message = $"'{documentNumber}' için makro dosyasında {responseData.Count} kayıt bulundu."
+                    message = $"'{documentNumber}' iÃ§in makro dosyasÃ½nda {responseData.Count} kayÃ½t bulundu."
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Hızlı arama hatası: {DocumentNumber}", documentNumber);
+                _logger.LogError(ex, "HÃ½zlÃ½ arama hatasÃ½: {DocumentNumber}", documentNumber);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
 
-        /// <summary>
-        /// Dosya numarasına göre verileri arar - sadece 'gerceklesenhesap_20250905104743.xlsx' dosyasında arama yapar
-        /// </summary>
+    
         [HttpGet("search-in-hesap/{documentNumber}")]
         public async Task<IActionResult> SearchInHesapFile(string documentNumber, [FromQuery] string? sheetName = null)
         {
             try
             {
                 documentNumber = Uri.UnescapeDataString(documentNumber);
-                var targetFile = "gerceklesenhesap_20250905104743.xlsx";
+                var targetFile = "gerceklesenhesap_20251003191421.xlsx";
 
                 var query = _context.ExcelDataRows.Where(r => !r.IsDeleted &&
                     r.FileName == targetFile &&
@@ -741,7 +737,7 @@ namespace ExcelDataManagementAPI.Controllers
                     return NotFound(new
                     {
                         success = false,
-                        message = $"'{documentNumber}' dosya numarası {targetFile} dosyasında bulunamadı.",
+                        message = $"'{documentNumber}' dosya numarasÃ½ {targetFile} dosyasÃ½nda bulunamadÃ½.",
                         searchedFile = targetFile
                     });
                 }
@@ -774,7 +770,7 @@ namespace ExcelDataManagementAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Hesap dosyasında arama hatası: {DocumentNumber}", documentNumber);
+                _logger.LogError(ex, "Hesap dosyasÃ½nda arama hatasÃ½: {DocumentNumber}", documentNumber);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
