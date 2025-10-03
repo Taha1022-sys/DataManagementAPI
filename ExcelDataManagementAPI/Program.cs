@@ -97,6 +97,12 @@ namespace ExcelDataManagementAPI
             app.UseAuthorization();
             app.MapControllers();
 
+            app.MapGet("/", context =>
+                       {
+                           context.Response.Redirect("/swagger");
+                           return Task.CompletedTask;
+                       });
+
             try
             {
                 using var scope = app.Services.CreateScope();
