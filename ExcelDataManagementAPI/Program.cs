@@ -37,13 +37,7 @@ namespace ExcelDataManagementAPI
             
             builder.Services.AddScoped<IExcelService, ExcelService>();
             builder.Services.AddScoped<IDataComparisonService, DataComparisonService>();
-            builder.Services.AddScoped<IAuditService, AuditService>();
-      
-            builder.WebHost.UseUrls(
-                
-                "http://0.0.0.0:5002"
-            
-            );
+            builder.Services.AddScoped<IAuditService, AuditService>();    
 
             builder.Services.AddHttpContextAccessor();  
 
